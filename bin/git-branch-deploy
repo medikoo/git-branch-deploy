@@ -1,0 +1,24 @@
+#!/usr/bin/env node
+
+'use strict';
+
+Error.stackTraceLimit = Infinity;
+
+var contains = require('es5-ext/string/#/contains')
+  , argv = process.argv, data, remote, branch, options = {};
+
+if (argv.length === 3) {
+	branch = argv[2];
+	if (contains.call(branch, '/')) {
+		branch = branch.split('/');
+		options.remote = branch[0];
+		branch = branch[1];
+	}
+} else {
+	console.log("Usage: git-branch-deploy remote/branch");
+	process.exit(1);
+}
+
+require('../')(branch, options, function (err) {
+	if (err) console.log(err.message);
+});
