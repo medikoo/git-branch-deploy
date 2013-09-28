@@ -7,4 +7,4 @@
 
 ### Usage
 
-  $ git-branch-deploy some-remote/fix-issue
+	$ git-branch-deploy some-remote/fix-issue
