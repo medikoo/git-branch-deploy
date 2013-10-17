@@ -40,7 +40,7 @@ module.exports = function (branch/*, options, cb*/) {
 	if (!remote) {
 		flow = flow.then(lock.call(exec, 'git branch'))
 			.then(function (std) {
-				if (!tracksBranch(std.out, branch)) return;
+				if (tracksBranch(std.out, branch)) return;
 				return exec('git branch --track ' + branch);
 			});
 	}
