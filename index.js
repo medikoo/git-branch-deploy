@@ -30,9 +30,7 @@ module.exports = function (branch/*, options, cb*/) {
 	batch.add('git pull');
 	batch.add('git fetch' + (remote ? (' ' + remote) : ''));
 	if (!remote) {
-		batch.add('git checkout ' + branch);
-		batch.add('git pull');
-		batch.add('git checkout master');
+		batch.add('git branch --track ' + branch);
 	}
 	batch.add('git merge --no-commit --no-ff ' +
 		(remote ? (remote + '/') : '') + branch);
