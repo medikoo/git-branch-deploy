@@ -1,20 +1,12 @@
 'use strict';
 
-var lock       = require('es5-ext/function/#/lock')
-  , copy       = require('es5-ext/object/copy')
+var copy       = require('es5-ext/object/copy')
   , isCallable = require('es5-ext/object/is-callable')
   , callable   = require('es5-ext/object/valid-callable')
-  , escape     = require('es5-ext/reg-exp/escape')
-  , exec       = require('exec-batch/exec')
-
-  , tracksBranch;
-
-tracksBranch = function (out, name) {
-	return RegExp('(?:^|\n) (?:\\*: ) ' + escape(name) + '(?:$|\n)').test(out);
-};
+  , ExecBatch  = require('exec-batch');
 
 module.exports = function (branch/*, options, cb*/) {
-	var options = arguments[1], cb = arguments[2], remote, flow;
+	var options = arguments[1], cb = arguments[2], remote, batch;
 	if (cb != null) {
 		callable(cb);
 		options = Object(options);
@@ -29,23 +21,18 @@ module.exports = function (branch/*, options, cb*/) {
 		options = copy(options);
 		delete options.remote;
 	}
+	batch = new ExecBatch(options);
 
-	flow = exec('git reset')
-		.then(lock.call(exec, 'git checkout .'))
-		.then(lock.call(exec, 'git clean -df'))
-		.then(lock.call(exec, 'git checkout master'))
-		.then(lock.call(exec, 'git pull'))
-		.then(lock.call(exec, 'git fetch' + (remote ? (' ' + remote) : '')));
+	if (!remote) remote = 'origin';
 
-	if (!remote) {
-		flow = flow.then(lock.call(exec, 'git branch'))
-			.then(function (std) {
-				if (tracksBranch(std.out, branch)) return;
-				return exec('git branch --track ' + branch);
-			});
-	}
+	batch.add('git reset');
+	batch.add('git checkout .');
+	batch.add('git clean -df');
+	batch.add('git checkout master');
+	batch.add('git pull');
+	batch.add('git fetch ' + remote + ' ' + branch);
+	batch.add('git merge --no-commit --no-ff ' + remote + ' ' + branch);
+	batch.add('git reset');
 
-	flow.then(lock.call(exec, 'git merge --no-commit --no-ff ' +
-		(remote ? (remote + '/') : '') + branch))
-		.then(lock.call(exec, 'git reset')).done();
+	batch.start(cb);
 };
