@@ -30,6 +30,7 @@ module.exports = function (branch/*, options, cb*/) {
 	batch.add('git clean -df');
 	batch.add('git checkout master');
 	batch.add('git pull');
+	batch.add('git fetch ' + remote);
 	batch.add('git fetch ' + remote + ' ' + branch);
 	batch.add('git merge --no-commit --no-ff ' + remote + '/' + branch);
 	batch.add('git reset');
