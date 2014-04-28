@@ -1,6 +1,6 @@
 {
   "name": "git-branch-deploy",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Setup repository branch for deployment",
   "author": "Mariusz Nowak <medyk@medikoo.com> (http://www.medikoo.com/)",
   "keywords": [
@@ -13,8 +13,8 @@
   ],
   "bin": "./bin/git-branch-deploy",
   "dependencies": {
-    "es5-ext": "git://github.com/medikoo/es5-ext",
-    "exec-batch": "git://github.com/medikoo/exec-batch"
+    "es5-ext": "~0.10.2",
+    "exec-batch": "0.1.x"
   },
   "license": "MIT"
 }

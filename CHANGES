@@ -1,0 +1,7 @@
+v0.1.0  --  2014.04.28
+* Rely strictly on npm hosted dependencies
+* Documentation
+* Improve internal logic
+
+v0.0.0  --  2013.09.28
+Initial (dev version)
